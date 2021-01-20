@@ -12,6 +12,7 @@
         </scroll>
          <detail-bottombar @barClick="barClick"/>
         <back-top class="backtop" @click.native="backtop" v-show="isshow"/>
+        <toast :message="message" :ishow="ishow"/>
     </div>
 </template>
 
@@ -29,6 +30,7 @@ import DetailParamInfo from 'views/detail/detailComps/DetailParamInfo'
 import DetailCommentInfo from 'views/detail/detailComps/DetailCommentInfo'
 import GoodsList from 'components/content/goods/GoodsList'
 import DetailBottombar from 'views/detail/detailComps/DetailBottombar'
+import Toast from 'components/common/toast/Toast'
 //引入封装的滚动插件
 import scroll from 'components/common/scroll/Scroll'
 //引入防抖
@@ -36,6 +38,8 @@ import {debounce} from 'common/utils'
 //混入
 import {itemListenerMixin,backtop} from 'common/mixin'
 import BackTop from 'components/content/backTop/BackTop'
+//映射mapActions里的方法
+import {mapActions} from 'vuex'
 
 
 
@@ -57,7 +61,9 @@ export default {
             commentInfo:{},
             recommends:[],
             offsetTopY:[],
-            currentIndex:0
+            currentIndex:0,
+            message:"",
+            ishow:false
         }
     },
     components:{
@@ -71,9 +77,9 @@ export default {
         DetailCommentInfo,
         GoodsList,
         DetailBottombar,
-        BackTop
+        BackTop,
+        Toast
     },
-   
   created(){
       //保存传入的iid
       this.iid= this.$route.params.iid
@@ -120,6 +126,7 @@ export default {
       })
     },
     methods:{
+        ...mapActions(['addCart']),
         imgLoad(){
             this.$refs.scroll.refresh()
 
@@ -173,7 +180,18 @@ export default {
             // console.log($store);
 
             //获取vuex里的actions方法
-            this.$store.dispatch('addCart', product)
+            // this.$store.dispatch('addCart', product).then((res)=>{
+            //     console.log(res);
+            // })
+            this.addCart(product).then((res)=>{
+                this.ishow=true
+                this.message=res
+                
+                setTimeout(()=>{
+                    this.ishow=false
+                    this.message=''
+                },2000)
+            })
         }
     }
 }

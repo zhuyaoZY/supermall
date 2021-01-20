@@ -19,6 +19,7 @@ export default {
         height: 44px;
         width: 100%;
         box-shadow: 0 1px 2px rgba(0, 0, 0, .1);
+        font-size: 14px;
     }
     .left,.right{
         width: 60px;

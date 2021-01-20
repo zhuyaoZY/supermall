@@ -1,14 +1,13 @@
 <template>
 <div class="car-list">
-  <nav-bar class="navbar">
-    <div slot="center">购物车({{this.length}})</div>
-  </nav-bar>
-   <scroll ref="scroll" class="content" :probeType="3">
+    <nav-bar class="navbar">
+      <div slot="center">购物车({{this.length}})</div>
+    </nav-bar>
+    <scroll ref="scroll" class="content" :probeType="3">
         <cart-list/>
     </scroll>
-    <cart-bottom>
-
-    </cart-bottom>
+    <cart-bottom @showClick="showClick"/>
+    <toast :message="message" :ishow="ishow"/>
   </div>
 </template>
 
@@ -19,31 +18,66 @@ import NavBar from 'components/common/navbar/NavBar'
 import Scroll from 'components/common/scroll/Scroll'
 //导入CartList组件
 import CartList from './cartComps/CartList'
-//
+//Toast弹框组件
+import Toast from 'components/common/toast/Toast'
 import CartBottom from './cartComps/CartBottom'
 import {mapGetters} from 'vuex'
-
+//引入防抖
+import {debounce} from 'common/utils'
 
 
 
   export default {
     name: "Cart",
+    data(){
+      return {
+        message:"",
+        ishow:false,
+        stopClickLogin:true
+      }
+    },
     components:{
       NavBar,
       Scroll,
       CartList,
       CartBottom,
-
+      Toast
 
     },
     computed:{
    ...mapGetters({
         length:'CartLength',
+        Cart:'CartList'
       }),
     },
     //进入页面时触发
     activated(){
       this.$refs.scroll.refresh()
+    },
+    mounted(){
+    },
+    methods:{
+       showClick(){
+         //使用节流防止用户点击多次
+         let that=this
+         if(that.stopClickLogin){
+             if(that.length==0){
+                that.message='请添加商品'
+                that.ishow=true
+              }else if(that.Cart.filter(item=>{return item.checked}).length==0){
+                  that.message='请选中商品'
+                  that.ishow=true
+              }
+              setTimeout(()=>{
+                that.message=''
+                  that.ishow=false
+              },2000)
+              that.stopClickLogin=false
+               setTimeout(()=>{
+                that.stopClickLogin=true
+            },2000)
+          }
+       },
     }
   }
 </script>

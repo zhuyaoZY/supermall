@@ -7,7 +7,7 @@
       <div class="center">
           合计：￥{{totalPrice}}
       </div>
-      <div class="right">
+      <div class="right" @click="showClick">
           结算:({{totallength}})
       </div>
   </div>
@@ -35,24 +35,24 @@ export default {
             return this.$store.state.cartList.filter(item=>{return item.checked}).length
         },
         isSelectAll(){
-            //自己写
-            // if(this.$store.state.cartList.length==0){
-            //     return false
-            // }else{
-            //    return this.$store.state.cartList.filter(item=>{return item.checked}).length==this.$store.state.cartList.length
-            // }
+            // 自己写
+            if(this.$store.state.cartList.length==0){
+                return false
+            }else{
+               return this.$store.state.cartList.filter(item=>{return item.checked}).length==this.$store.state.cartList.length
+            }
             //老师写
             //1.使用filter
             // return !(this.$store.state.cartList.filter(item=>!item.checked).length)
             //2.使用find
             // return !this.$store.state.cartList.find(item=>!item.checked)
             //3.普通遍历
-          for(let item of this.$store.state.cartList){
-              if(!item.checked){
-                  return false
-              }
-          }
-          return true
+        //   for(let item of this.$store.state.cartList){
+        //       if(!item.checked){
+        //           return false
+        //       }
+        //   }
+        //   return true
         }
     },
     methods:{
@@ -67,6 +67,9 @@ export default {
                     element.checked=true
                 });
             }
+        },
+        showClick(){
+            this.$emit('showClick',this.isSelectAll)
         }
     }
 }
@@ -83,6 +86,7 @@ export default {
     bottom: 49px;
     align-items: center;
     text-align: center;
+    font-size: 14px;
 }
 .left{
     width: 70px;
