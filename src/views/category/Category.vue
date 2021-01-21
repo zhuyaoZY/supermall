@@ -150,6 +150,7 @@ import {debounce} from 'common/utils'
 
 <style scoped>
 .content1{
+    overflow: hidden;
     position: absolute;
     top: 44px;
     bottom: 49px;
@@ -158,6 +159,7 @@ import {debounce} from 'common/utils'
     background-color: #f6f6f6;
 }
 .content2{
+    overflow: hidden;
     position: absolute;
     top: 44px;
     bottom: 49px;
