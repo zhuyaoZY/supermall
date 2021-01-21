@@ -85,7 +85,7 @@ import {debounce} from 'common/utils'
       //点击获取详细信息数据
       isClick(index){
           this.getSubcategoryy(index)
-          console.log(index);
+          this.$refs.scroll2.scrollTo(0,0,0)
       },
       getSubcategoryy(index){
         this.crentIndex=index;
