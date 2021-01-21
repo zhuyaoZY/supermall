@@ -24,7 +24,7 @@ export default {
     computed:{
       //判断显示首页图片还是详情页图片
       showImg(){
-        return this.goodsItem.image || this.goodsItem.show.img
+        return this.goodsItem.img || this.goodsItem.image || this.goodsItem.show.img
       }  
     },
     methods:{
@@ -38,6 +38,9 @@ export default {
         }else if(this.$route.path.indexOf('/detail')!==-1){
           //发送到事件总线
         this.$bus.$emit('detailitemImgeLoad')
+        }else if(this.$route.path.indexOf('/category'!==-1)){
+           //发送到事件总线
+        this.$bus.$emit('categoryImgeLoad')
         }
       },
       //路由跳转到详情页.动态路由传参

@@ -39,7 +39,6 @@ export default {
 }
 .tab-item{
     flex: 1;
-    
 }
 .tab-item span{
     padding: 5px;

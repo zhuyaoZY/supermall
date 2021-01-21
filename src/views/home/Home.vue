@@ -165,9 +165,6 @@ import {itemListenerMixin} from 'common/mixin'
   position: fixed;
   z-index: 2;
 }
-.home-swiper{
-  /* padding-top: 44px; */
-}
 .tabcontrol{
   position: relative;
   top: 44px;

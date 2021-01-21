@@ -1,144 +1,180 @@
 <template>
-  <div class="wrapper">
-    <ul class="content">
-      <button @click="btnClick">按钮</button>
-      <li>liebiao1</li>
-      <li>liebiao2</li>
-      <li>liebiao3</li>
-      <li>liebiao4</li>
-      <li>liebiao5</li>
-      <li>liebiao6</li>
-      <li>liebiao7</li>
-      <li>liebiao8</li>
-      <li>liebiao9</li>
-      <li>liebiao10</li>
-      <li>liebiao11</li>
-      <li>liebiao12</li>
-      <li>liebiao13</li>
-      <li>liebiao14</li>
-      <li>liebiao15</li>
-      <li>liebiao16</li>
-      <li>liebiao17</li>
-      <li>liebiao18</li>
-      <li>liebiao19</li>
-      <li>liebiao20</li>
-      <li>liebiao21</li>
-      <li>liebiao22</li>
-      <li>liebiao23</li>
-      <li>liebiao24</li>
-      <li>liebiao25</li>
-      <li>liebiao26</li>
-      <li>liebiao27</li>
-      <li>liebiao28</li>
-      <li>liebiao29</li>
-      <li>liebiao30</li>
-      <li>liebiao31</li>
-      <li>liebiao32</li>
-      <li>liebiao33</li>
-      <li>liebiao34</li>
-      <li>liebiao35</li>
-      <li>liebiao36</li>
-      <li>liebiao37</li>
-      <li>liebiao38</li>
-      <li>liebiao39</li>
-      <li>liebiao40</li>
-      <li>liebiao41</li>
-      <li>liebiao42</li>
-      <li>liebiao43</li>
-      <li>liebiao44</li>
-      <li>liebiao45</li>
-      <li>liebiao46</li>
-      <li>liebiao47</li>
-      <li>liebiao48</li>
-      <li>liebiao49</li>
-      <li>liebiao50</li>
-      <li>liebiao51</li>
-      <li>liebiao52</li>
-      <li>liebiao53</li>
-      <li>liebiao54</li>
-      <li>liebiao55</li>
-      <li>liebiao56</li>
-      <li>liebiao57</li>
-      <li>liebiao58</li>
-      <li>liebiao59</li>
-      <li>liebiao60</li>
-      <li>liebiao61</li>
-      <li>liebiao62</li>
-      <li>liebiao63</li>
-      <li>liebiao64</li>
-      <li>liebiao65</li>
-      <li>liebiao66</li>
-      <li>liebiao67</li>
-      <li>liebiao68</li>
-      <li>liebiao69</li>
-      <li>liebiao70</li>
-      <li>liebiao71</li>
-      <li>liebiao72</li>
-      <li>liebiao73</li>
-      <li>liebiao74</li>
-      <li>liebiao75</li>
-      <li>liebiao76</li>
-      <li>liebiao77</li>
-      <li>liebiao78</li>
-      <li>liebiao79</li>
-      <li>liebiao80</li>
-      <li>liebiao81</li>
-      <li>liebiao82</li>
-      <li>liebiao83</li>
-      <li>liebiao84</li>
-      <li>liebiao85</li>
-      <li>liebiao86</li>
-      <li>liebiao87</li>
-      <li>liebiao88</li>
-      <li>liebiao89</li>
-      <li>liebiao90</li>
-      <li>liebiao91</li>
-      <li>liebiao92</li>
-      <li>liebiao93</li>
-      <li>liebiao94</li>
-      <li>liebiao95</li>
-      <li>liebiao96</li>
-      <li>liebiao97</li>
-      <li>liebiao98</li>
-      <li>liebiao99</li>
-      <li>liebiao100</li>
-    </ul>
+  <div class="category">
+    <nav-bar class="category-nav"><div slot="center">分类</div></nav-bar>
+     <scroll class="content1" ref="scroll1" :probeType="3">
+         <categorytitle :categorylist="categorylist" @isClick="isClick"/>
+     </scroll>
+     <scroll class="content2" ref="scroll2" :probeType="3">
+          <categorydetailed :Subcategory="Subcategory"/>
+          <tab-control class="control" :titles="['流行','新款','精选']" @tabClick="tabClick"/>
+          <goods-list :goods="showGoods"/>
+    </scroll>
   </div>
 </template>
 
 <script>
-import BScroll from 'better-scroll'
+//引入顶部栏组件
+import NavBar from 'components/common/navbar/NavBar'
+//引入侧边栏标题
+import categorytitle from './categoryComps/categorytitle'
+//引入滚动插件
+import Scroll from 'components/common/scroll/Scroll'
+//引入详情分类
+import categorydetailed from './categoryComps/categorydetailed'
+//引入TabControl
+import TabControl from 'components/content/tabControl/TabControl'
+//引入Goodslist
+import GoodsList from 'components/content/goods/GoodsList'
+
+//获取分类数据的请求方法
+import {getCategory,getSubcategory,getCategoryDetail} from 'network/category'
+//引入防抖
+import {debounce} from 'common/utils'
+
+
+
   export default {
     name: "Category",
-    methods:{
-      btnClick(){
-        console.log('点击了');
+    data(){
+      return{
+        //分类数据
+        categorylist:[],
+        //详细数据
+        Subcategory:[],
+        //
+        crentIndex:0,
+        //底部分类数据
+        goods:{
+          'pop':{list:[]},
+          'sell':{list:[]},
+          'new':{list:[]},
+        },
+        //默认选中
+        titlIndex:'pop'
       }
     },
+    //计算属性
+    computed:{
+        showGoods(){
+          return this.goods[this.titlIndex].list
+        }
+    },
+    components:{
+      NavBar,
+      categorytitle,
+      categorydetailed,
+      TabControl,
+      GoodsList,
+      Scroll
+    },
+    created(){
+      this.getCategory()
+    },
+    methods:{
+      //获取分类列表
+      getCategory(){
+        getCategory().then(res=>{
+          console.log(res);
+          this.categorylist=res.data.category.list
+          console.log(this.categorylist);
+
+          //获取详细信息,要先获取到分类列表
+        this.getSubcategoryy(0);
+        })
+      },
+      //点击获取详细信息数据
+      isClick(index){
+          this.getSubcategoryy(index)
+          console.log(index);
+      },
+      getSubcategoryy(index){
+        this.crentIndex=index;
+        const maitKey=this.categorylist[index].maitKey
+        getSubcategory(maitKey).then(res=>{
+          console.log(res);
+          this.Subcategory=res.data.list
+          console.log(this.Subcategory);
+          //调用获取底部数据
+          this.getCategoryDetail('pop')
+          this.getCategoryDetail('sell')
+          this.getCategoryDetail('new')
+        })
+      },
+      //获取底部分类数据
+      getCategoryDetail(type){
+          const miniWallkey=this.categorylist[this.crentIndex].miniWallkey
+          getCategoryDetail(miniWallkey,type).then(res=>{
+            console.log(res);
+            this.goods[type].list=res
+          })
+      },
+      //点击切换
+        tabClick(index){
+          switch (index) {
+            case 0:
+              this.titlIndex='pop'
+              break;
+          
+            case 1:
+              this.titlIndex='sell'
+              break;
+
+            case 2:
+              this.titlIndex='new'
+              break;
+          }
+          
+      }
+    },
+
+    
+    
     mounted(){
-      let wrapper = document.querySelector('.wrapper')
-      let scroll = new BScroll(wrapper,{
-        probeType:3,
-        pullUpLoad:true,
-        click:true
+      const refresh=debounce(this.$refs.scroll2.refresh,50)
+      //获取事件总线里的图片加载事件
+      this.$bus.$on('categorydetailedimgLoad',()=>{
+        refresh()
       })
-      scroll.on('scroll',(event)=>{
-        // console.log(event);
+      this.$bus.$on('categoryImgeLoad',()=>{
+        refresh()
       })
-      scroll.on('pullingUp',()=>{
-        console.log('上拉加载更多');
-        setTimeout(function(){
-            scroll.finishPullUp()
-        },2000)
+    },
+    updated(){
+        this.$nextTick(()=>{
+        this.$refs.scroll1.refresh()
+        this.$refs.scroll2.refresh()
       })
     }
   }
 </script>
 
 <style scoped>
-.wrapper{
-  height: 150px;
-  background-color: red;
-  overflow: hidden;
+.content1{
+    position: absolute;
+    top: 44px;
+    bottom: 49px;
+    left: 0px;
+    right: 0px;
+    background-color: #f6f6f6;
+}
+.content2{
+    position: absolute;
+    top: 44px;
+    bottom: 49px;
+    left: 100px;
+    right: 0px;
+    background-color: #fff;
+}
+.category-nav{
+  background-color: var(--color-tint);
+  color: #fff;
+  position: fixed;
+  z-index: 2;
+}
+.control{
+  width: 100%;
+}
+.control .item{
+  width: 33%;
 }
 </style>
