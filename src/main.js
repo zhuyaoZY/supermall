@@ -6,6 +6,7 @@ import store from './store'
 import FastClick from 'fastclick'
 //引入lib-flexible
 import 'lib-flexible'
+
 //引入懒加载
 import VuelazyLoad from 'vue-lazyload'
 // Vue.use(VuelazyLoad)
