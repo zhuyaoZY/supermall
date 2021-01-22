@@ -1,10 +1,12 @@
 <template>
    <div>
      <nav-bar class="profile"><div slot="center">小朱购物</div></nav-bar>
-      <profilepersonal/>
-      <profileinformation/>
-      <profileCompslink :wodedata="xiaoxidata"/>
-      <profileCompslink :wodedata="xiazaidata"/>
+     <div class="pro">
+        <profilepersonal/>
+        <profileinformation/>
+        <profileCompslink :wodedata="xiaoxidata"/>
+        <profileCompslink :wodedata="xiazaidata"/>
+      </div>
    </div>
 </template>
 
@@ -42,6 +44,15 @@ import profileCompslink from './profileComps/profileCompslink'
 </script>
 
 <style scoped>
+.pro{
+  overflow: hidden;
+  overflow-y: scroll;
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 44px;
+  bottom: 49px;
+}
 .profile{
   background-color: var(--color-tint);
   color: #fff;

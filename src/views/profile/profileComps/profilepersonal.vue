@@ -22,7 +22,6 @@ export default {
 <style scoped>
 .personal{
     display: flex;
-    margin-top: 44px;
     height: 120px;
     background-image:url('https://ss1.bdstatic.com/70cFuXSh_Q1YnxGkpoWK1HF6hhy/it/u=2290338763,1795964104&fm=26&gp=0.jpg');
     align-items: center;
